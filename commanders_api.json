@@ -1,0 +1,58 @@
+[
+    {
+        "Commander Name": "Adunae",
+        "Race/Faction": "Evil Man",
+        "Tier": "Legendary",
+        "Might": 39,
+        "Focus": 39,
+        "Speed": 33,
+        "Command": 18,
+        "Skill Name": "Spell Seeker",
+        "Skill Type": "Focus Damage",
+        "Skill Effect Lv1": "Deals 24.0% Focus Damage to 2 formations.",
+        "Skill Effect Lv5": "[Commander] Focus +6, Attack -3",
+        "Skill Effect Lv10": "[Commander] Focus +5"
+    },
+    {
+        "Commander Name": "Sauron",
+        "Race/Faction": "Maiar",
+        "Tier": "Tier 3",
+        "Might": 90,
+        "Focus": 366,
+        "Speed": 105,
+        "Command": 100,
+        "Skill Name": "The Enemy",
+        "Skill Type": "Debuff",
+        "Skill Effect Lv1": "Reduces enemy commander's Attack, Defense, and Focus by 1.5%",
+        "Skill Effect Lv5": "Reduces enemy stats by 7.5%",
+        "Skill Effect Lv10": "Reduces enemy stats by 15%, grants Stun immunity"
+    },
+    {
+        "Commander Name": "Th\u00e9oden",
+        "Race/Faction": "Men",
+        "Tier": "Tier 2",
+        "Might": 80,
+        "Focus": 70,
+        "Speed": 92,
+        "Command": 100,
+        "Skill Name": "The Renewed",
+        "Skill Type": "Passive Buff",
+        "Skill Effect Lv1": "Damage dealt by the commander's formation +3.0%",
+        "Skill Effect Lv5": "Damage dealt by the commander's formation +15.0%",
+        "Skill Effect Lv10": "Damage dealt by the commander's formation +30.0%"
+    },
+    {
+        "Commander Name": "Helm Hammerhand",
+        "Race/Faction": "Men",
+        "Tier": "Tier 3",
+        "Might": 95,
+        "Focus": 60,
+        "Speed": 85,
+        "Command": 100,
+        "Skill Name": "Helm's Fury",
+        "Skill Type": "Damage",
+        "Skill Effect Lv1": "Deals 50.0% Physical Damage to all enemies",
+        "Skill Effect Lv5": "Deals 250.0% Physical Damage to all enemies",
+        "Skill Effect Lv10": "Deals 500.0% Physical Damage to all enemies"
+    }
+]
