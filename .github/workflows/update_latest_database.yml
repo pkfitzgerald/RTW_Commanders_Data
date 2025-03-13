@@ -1,0 +1,30 @@
+name: Update Latest Database
+
+on:
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  update-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: pip install pandas
+
+      - name: Run Update Script
+        run: python update_latest_database.py
+
+      - name: Commit & Push Changes
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+          git add latest_RTW_commanders_database.csv
+          git commit -m "Added King of the Dead to latest_RTW_commanders_database" || echo "No changes to commit"
+          git push origin main || echo "Push failed"
