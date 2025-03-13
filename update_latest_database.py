@@ -20,7 +20,7 @@ EXPECTED_COLUMNS = [
 ]
 
 # Define King of the Dead's data
-kotd_data = {
+kotd_data = pd.DataFrame([{
     "Commander Name": "King of the Dead",
     "Race/Faction": "Undead",
     "Tier": "Mythic",
@@ -62,7 +62,7 @@ kotd_data = {
     "Skill 4 Effect Lv5": "[Unit] HP +10.0%.",
     "Skill 4 Effect Lv10": "Grants 1 additional instance of healing to 1 Undead unit formation(s).",
     "Last_Updated_By": "GitHub Actions"
-}
+}])
 
 def fix_headers(df):
     """Ensure the CSV headers are correct."""
@@ -85,8 +85,8 @@ def update_csv():
             print("✅ King of the Dead is already in the database.")
             return  # No update needed
 
-        # Add new row
-        df = df.append(kotd_data, ignore_index=True)
+        # **Use pd.concat() instead of append() to fix deprecation issue**
+        df = pd.concat([df, kotd_data], ignore_index=True)
 
         # Save updated CSV
         df.to_csv(CSV_PATH, index=False)
@@ -112,6 +112,4 @@ def git_push():
 
 if __name__ == "__main__":
     update_csv()  # Fix headers & add King of the Dead
-    git_push()  # Push updates
-
     git_push()  # Push updates
