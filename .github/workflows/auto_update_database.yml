@@ -1,0 +1,33 @@
+name: Auto-Update Commander Database
+
+on:
+  push:
+    paths:
+      - "commander_images/**"
+  workflow_dispatch:
+
+jobs:
+  update-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install pandas openpyxl
+
+      - name: Run update script
+        run: python update_latest_database.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+          git add latest_RTW_commanders_database.csv
+          git commit -m "Auto-update latest_RTW_commanders_database.csv"
+          git push origin main
