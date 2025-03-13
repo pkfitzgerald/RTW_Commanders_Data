@@ -79,4 +79,16 @@ def git_push():
     subprocess.run(["git", "add", CSV_PATH])
 
     # Check if there are actual changes
-    status_output = subprocess.run(["git", "status", "--porcelain"],
+    status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    
+    if not status_output.stdout.strip():
+        print("No new changes detected. Skipping push.")
+        return  # Exit if no new data was added
+
+    # Commit and push
+    subprocess.run(["git", "commit", "-m", "Added King of the Dead to latest_RTW_commanders_database"])
+    subprocess.run(["git", "push", "origin", "main"])
+
+if __name__ == "__main__":
+    update_csv()  # Add King of the Dead
+    git_push()  # Push updates
