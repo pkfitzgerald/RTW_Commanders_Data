@@ -1,6 +1,7 @@
 import subprocess
 import pandas as pd
 from openpyxl import load_workbook
+import time
 
 # Path to your spreadsheet
 SPREADSHEET_PATH = "RTW_commanders_database.xlsx"
@@ -11,8 +12,8 @@ def update_spreadsheet():
         wb = load_workbook(SPREADSHEET_PATH)
         sheet = wb.active  # Use the active sheet
 
-        # Example: Update a specific cell (modify as needed)
-        sheet["A1"] = "Updated by GitHub Actions"
+        # Example: Update timestamp to force a change
+        sheet["Z1"] = f"Updated: {time.strftime('%Y-%m-%d %H:%M:%S')}"
 
         # Save the updated spreadsheet
         wb.save(SPREADSHEET_PATH)
