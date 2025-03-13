@@ -29,6 +29,6 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add RTW_commanders_database.xlsx
-        git commit -m "Auto-updated commander database" || echo "No changes to commit"
+        git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
+        git commit -m "Auto-updated commander database and CSV" || echo "No changes to commit"
         git push
