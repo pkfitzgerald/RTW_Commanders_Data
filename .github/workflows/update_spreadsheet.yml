@@ -33,4 +33,5 @@ jobs:
           git config --global user.email "actions@github.com"
           git add RTW_commanders_database.xlsx
           git commit -m "Auto-updated commander data"
-          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/pkfitzgerald/RTW_Commander_Data.git
+          git push https://github.com/pkfitzgerald/RTW_Commanders_Data.git main
+
