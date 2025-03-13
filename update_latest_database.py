@@ -3,7 +3,23 @@ import subprocess
 
 CSV_PATH = "latest_RTW_commanders_database.csv"
 
-# King of the Dead's data
+# Expected correct column headers
+EXPECTED_COLUMNS = [
+    "Commander Name", "Race/Faction", "Tier", "Damage Min", "Damage Max", "Attack", "Focus", "Speed",
+    "Command", "Defense", "HP", "Unique Item", "Unique Item Effect", "Weapon", "Chest Armor", "Helmet",
+    "Accessory", "Set Effect", "Troop Bonus", "Skill 1 Name", "Skill 1 Type", "Skill 1 Effect Lv1",
+    "Skill 1 Effect Lv5", "Skill 1 Effect Lv10", "Skill 1 Cooldown", "Skill 1 Damage Multiplier",
+    "Skill 1 Damage Reduction", "Skill 1 Proc Chance", "Skill 1 Follow-Up Effect", "Skill 2 Name",
+    "Skill 2 Type", "Skill 2 Effect Lv1", "Skill 2 Effect Lv5", "Skill 2 Effect Lv10", "Skill 2 Cooldown",
+    "Skill 2 Damage Multiplier", "Skill 2 Damage Reduction", "Skill 2 Proc Chance", "Skill 2 Follow-Up Effect",
+    "Skill 3 Name", "Skill 3 Type", "Skill 3 Effect Lv1", "Skill 3 Effect Lv5", "Skill 3 Effect Lv10",
+    "Skill 3 Cooldown", "Skill 3 Damage Multiplier", "Skill 3 Damage Reduction", "Skill 3 Proc Chance",
+    "Skill 3 Follow-Up Effect", "Skill 4 Name", "Skill 4 Type", "Skill 4 Effect Lv1", "Skill 4 Effect Lv5",
+    "Skill 4 Effect Lv10", "Skill 4 Cooldown", "Skill 4 Damage Multiplier", "Skill 4 Damage Reduction",
+    "Skill 4 Proc Chance", "Skill 4 Follow-Up Effect", "Last_Updated_By"
+]
+
+# Define King of the Dead's data
 kotd_data = {
     "Commander Name": "King of the Dead",
     "Race/Faction": "Undead",
@@ -44,22 +60,27 @@ kotd_data = {
     "Skill 4 Type": "Healing",
     "Skill 4 Effect Lv1": "Restores 31.0% → 310.0% HP to Small Units in the Commander’s formation (effect modified by Focus stat). Unaffected by heal block.",
     "Skill 4 Effect Lv5": "[Unit] HP +10.0%.",
-    "Skill 4 Effect Lv10": "Grants 1 additional instance of healing to 1 Undead unit formation(s)."
+    "Skill 4 Effect Lv10": "Grants 1 additional instance of healing to 1 Undead unit formation(s).",
+    "Last_Updated_By": "GitHub Actions"
 }
+
+def fix_headers(df):
+    """Ensure the CSV headers are correct."""
+    if list(df.columns) != EXPECTED_COLUMNS:
+        print("❌ WARNING: Incorrect column headers detected. Fixing...")
+        df.columns = EXPECTED_COLUMNS  # Force correct headers
+    return df
 
 def update_csv():
     """Check for King of the Dead and update the database."""
     try:
-        # Load CSV and ensure correct column names
+        # Load CSV with safety checks
         df = pd.read_csv(CSV_PATH)
 
-        # Ensure 'Commander Name' exists
-        if "Commander Name" not in df.columns:
-            print("❌ ERROR: 'Commander Name' column not found. Check the CSV format.")
-            print("🔍 Current Columns:", df.columns.tolist())
-            return  # Stop execution
+        # Fix headers if necessary
+        df = fix_headers(df)
 
-        # Check if King of the Dead exists
+        # Check if King of the Dead is already in the dataset
         if "King of the Dead" in df["Commander Name"].values:
             print("✅ King of the Dead is already in the database.")
             return  # No update needed
@@ -86,9 +107,11 @@ def git_push():
         return  # Exit if no new data was added
 
     # Commit and push
-    subprocess.run(["git", "commit", "-m", "Added King of the Dead to latest_RTW_commanders_database"])
+    subprocess.run(["git", "commit", "-m", "Fixed headers and added King of the Dead"])
     subprocess.run(["git", "push", "origin", "main"])
 
 if __name__ == "__main__":
-    update_csv()  # Add King of the Dead
+    update_csv()  # Fix headers & add King of the Dead
+    git_push()  # Push updates
+
     git_push()  # Push updates
