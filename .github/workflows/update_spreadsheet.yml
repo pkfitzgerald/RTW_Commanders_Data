@@ -1,34 +1,39 @@
-name: Update Commander Database
+name: Update Commander Spreadsheet
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+  push:
+    paths:
+      - 'RTW_commanders_database.xlsx'
 
 jobs:
-  update-database:
+  update-spreadsheet:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.9"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Install dependencies
-      run: pip install pandas openpyxl
+      - name: Install dependencies
+        run: pip install pandas openpyxl
 
-    - name: Run update script
-      run: python update_spreadsheet.py
+      - name: Pull latest changes from GitHub
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
 
-    - name: Commit and push changes
-      run: |
-        git config --global user.name "GitHub Actions Bot"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
-        git commit -m "Auto-updated commander database and CSV" || echo "No changes to commit"
-        git push
+      - name: Run Spreadsheet Update Script
+        run: python update_spreadsheet.py
+
+      - name: Push changes to GitHub
+        run: |
+          git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
+          git commit -m "Auto-updated commander database and CSV"
+          git push origin main
