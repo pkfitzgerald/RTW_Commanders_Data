@@ -1,45 +1,44 @@
-name: Update Commander Spreadsheet
+name: Update Spreadsheet
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'RTW_commanders_database.xlsx'
+  workflow_dispatch:  # Allows manual triggering
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
 
 jobs:
-  update-spreadsheet:
+  update_spreadsheet:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0  # Ensures we have full history
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        persist-credentials: false  # Disables default token
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+    - name: Set Up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
 
-      - name: Install dependencies
-        run: pip install pandas openpyxl
+    - name: Install Dependencies
+      run: pip install pandas openpyxl
 
-      - name: Pull latest changes from GitHub
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+    - name: Pull Latest Changes
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions Bot"
+        git remote set-url origin https://x-access-token:${GH_PAT}@github.com/pkfitzgerald/RTW_Commanders_Data.git
+        git pull origin main --rebase || echo "No remote changes to pull"
 
-      - name: Run Spreadsheet Update Script
-        run: python update_spreadsheet.py
+    - name: Update Spreadsheet
+      run: python update_spreadsheet.py
 
-      - name: Check if changes exist
-        run: |
-          git status
-          git diff --quiet || echo "Changes detected"
-
-      - name: Push changes to GitHub
-        run: |
-          git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
-          git commit -m "Auto-updated commander database and CSV" || echo "No changes to commit"
-          git push origin main || echo "Nothing new to push"
+    - name: Push Changes to GitHub
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
+      run: |
+        git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
+        git commit -m "Auto-updated commander database and CSV" || echo "No changes to commit"
+        git push origin main || (git pull --rebase origin main && git push origin main)
