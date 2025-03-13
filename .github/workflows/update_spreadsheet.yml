@@ -14,6 +14,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
+          fetch-depth: 0  # Ensures we have full history
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -32,8 +33,13 @@ jobs:
       - name: Run Spreadsheet Update Script
         run: python update_spreadsheet.py
 
+      - name: Check if changes exist
+        run: |
+          git status
+          git diff --quiet || echo "Changes detected"
+
       - name: Push changes to GitHub
         run: |
           git add RTW_commanders_database.xlsx latest_RTW_commanders_database.csv
-          git commit -m "Auto-updated commander database and CSV"
-          git push origin main
+          git commit -m "Auto-updated commander database and CSV" || echo "No changes to commit"
+          git push origin main || echo "Nothing new to push"
