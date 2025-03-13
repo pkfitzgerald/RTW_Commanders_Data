@@ -50,8 +50,14 @@ kotd_data = {
 def update_csv():
     """Check for King of the Dead and update the database."""
     try:
-        # Load CSV
+        # Load CSV and ensure correct column names
         df = pd.read_csv(CSV_PATH)
+
+        # Ensure 'Commander Name' exists
+        if "Commander Name" not in df.columns:
+            print("❌ ERROR: 'Commander Name' column not found. Check the CSV format.")
+            print("🔍 Current Columns:", df.columns.tolist())
+            return  # Stop execution
 
         # Check if King of the Dead exists
         if "King of the Dead" in df["Commander Name"].values:
@@ -73,15 +79,4 @@ def git_push():
     subprocess.run(["git", "add", CSV_PATH])
 
     # Check if there are actual changes
-    status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-    if not status_output.stdout.strip():
-        print("No new changes detected. Skipping push.")
-        return  # Exit if no new data was added
-
-    # Commit and push
-    subprocess.run(["git", "commit", "-m", "Added King of the Dead to latest_RTW_commanders_database"])
-    subprocess.run(["git", "push", "origin", "main"])
-
-if __name__ == "__main__":
-    update_csv()  # Add King of the Dead
-    git_push()  # Push updates
+    status_output = subprocess.run(["git", "status", "--porcelain"],
